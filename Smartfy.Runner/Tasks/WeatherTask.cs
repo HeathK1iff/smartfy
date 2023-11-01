@@ -11,13 +11,20 @@ namespace Smartfy.Runner.Tasks
 {
     internal class WeatherTask : ITask
     {
-        private const string WeatherRecepientGroup = "weather"; 
+        private static string WeatherRecepientGroup = "weather"; 
         private ILogger? _logger;
+        private IServiceCollection _services;
 
-        public void Exeсute(IServiceCollection services, ref bool success)
+        public WeatherTask(IServiceCollection services, ILogger logger)
         {
-            var weatherService = services.GetService<IWeatherService>();
-            var messageService = services.GetService<IMessageService>();
+            _services = services;
+            _logger = logger;
+        }
+    
+        public bool Exeсute()
+        {
+            var weatherService = _services.GetService<IWeatherService>();
+            var messageService = _services.GetService<IMessageService>();
             
             weatherService.Refresh();
 
@@ -29,7 +36,7 @@ namespace Smartfy.Runner.Tasks
             messageBuilder.AppendLine($"Давление: {weatherService.Current.Pressure.Value} гПа");
             messageBuilder.AppendLine($"Ветер: {weatherService.Current.Wind.Value} м/c");
 
-            services.GetService<IMessageService>().Routes.AddRouteIfNotExist(new Route()
+            _services.GetService<IMessageService>().Routes.AddRouteIfNotExist(new Route()
             {
                 Group = WeatherRecepientGroup,
                 Recepient = ""
@@ -40,11 +47,7 @@ namespace Smartfy.Runner.Tasks
                 Data = messageBuilder.ToString(),
                 RecepientGroups = new string[] { WeatherRecepientGroup }
             });
-        }
 
-        public bool Prepare(Action? executeAction, ILoggerFactory loggerFactory)
-        {
-            _logger = loggerFactory.CreateLogger<WeatherTask>();
             return true;
         }
 

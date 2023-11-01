@@ -30,7 +30,7 @@ namespace Smartfy.Runner
             });
 
             _services.AddService<IMessageService>(new MessageService(_configuration));
-            _services.AddService<ITaskService>(new TaskService(_loggerFactory, _services));
+            _services.AddService<ITaskService>(new TaskService(_loggerFactory));
         }
 
         public void RunService()
@@ -39,12 +39,14 @@ namespace Smartfy.Runner
                 _configuration, _loggerFactory, _services);
             libraryLoader.LoadAll();
 
-            _services.GetService<ITaskService>().Add(new DailyTask(new WeatherTask(), 7, 0, true));
-            _services.GetService<ITaskService>().Add(new DailyTask(new WeatherTask(), 13, 0, true));
-            _services.GetService<ITaskService>().Add(new DailyTask(new WeatherTask(), 18, 0, true));
+            var weatherTask = new WeatherTask(_services, _loggerFactory.CreateLogger<WeatherTask>());
+            _services.GetService<ITaskService>().Add(new PeriodicalTask(7, 0, weatherTask));
+            _services.GetService<ITaskService>().Add(new PeriodicalTask(13, 0, weatherTask));
+            _services.GetService<ITaskService>().Add(new PeriodicalTask(18, 0, weatherTask));
 
-            _services.GetService<ITaskService>().Add(new DailyTask(new DailyMarksTask(), 15, 0, true));
-            _services.GetService<ITaskService>().Add(new DailyTask(new DailyMarksTask(), 19, 0, true));
+            var dailyMarkTask = new DailyMarksTask(_services, _loggerFactory.CreateLogger<DailyMarksTask>());
+            _services.GetService<ITaskService>().Add(new PeriodicalTask(15, 0, dailyMarkTask));
+            _services.GetService<ITaskService>().Add(new PeriodicalTask(19, 0, dailyMarkTask));
         }
     }
 }

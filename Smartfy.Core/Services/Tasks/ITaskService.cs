@@ -1,8 +1,7 @@
 ﻿namespace Smartfy.Core.Services.Tasks
 {
-    public interface ITaskService : IService, IEnumerable<ITask>
+    public interface ITaskService : IService
     {
-        Guid Add(ITask task);
-        void Execute(Guid id);
+        void Add(ITask task);
     }
 }

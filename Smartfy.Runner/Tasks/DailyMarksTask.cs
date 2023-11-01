@@ -12,12 +12,20 @@ namespace Smartfy.Runner.Tasks
 {
     internal class DailyMarksTask : ITask
     {
-        private const string EducationRecepientGroup = "education";
-        private ILogger? _logger;
-        public void Exeсute(IServiceCollection services, ref bool success)
+        private static string EducationRecepientGroup = "education";
+        private IServiceCollection _services;
+        private ILogger _logger;
+
+        public DailyMarksTask(IServiceCollection services, ILogger logger)
         {
-            var messageService = services.GetService<IMessageService>();
-            var dailyMarks = services.GetService<IEducationService>().GetDailyMarks();
+            _services = services;
+            _logger = logger;
+        }
+
+        public bool Exeсute()
+        {
+            var messageService = _services.GetService<IMessageService>();
+            var dailyMarks = _services.GetService<IEducationService>().GetDailyMarks();
 
             var messageBuilder = new StringBuilder();
             messageBuilder.AppendLine("Отчет по школе:");
@@ -26,28 +34,25 @@ namespace Smartfy.Runner.Tasks
                 messageBuilder.AppendLine($"{mark.Subject} : {mark.Mark}");
             }
 
-            services.GetService<IMessageService>().Routes.AddRouteIfNotExist(new Route()
+            _services.GetService<IMessageService>().Routes.AddRouteIfNotExist(new Route()
             {
                 Group = EducationRecepientGroup,
                 Recepient = ""
             });
 
-            success = dailyMarks.Count > 0;
+            var success = dailyMarks.Count > 0;
 
             if (success)
             {
-                _logger?.LogInformation($"Found {dailyMarks.Count} daily marks");
+                _logger.LogInformation($"Found {dailyMarks.Count} daily marks");
                 messageService.Publish(new GroupOutputMessage()
                 {
                     Data = messageBuilder.ToString(),
                     RecepientGroups = new string[] { EducationRecepientGroup }
                 });
             }
-        }
-
-        public bool Prepare(System.Action? executeAction, ILoggerFactory loggerFactory)
-        {
-            _logger = loggerFactory.CreateLogger<DailyMarksTask>();
+            _logger.LogDebug($"Daily marks is not found for today");
+            
             return true;
         }
     }

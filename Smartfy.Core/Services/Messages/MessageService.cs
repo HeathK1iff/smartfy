@@ -8,15 +8,13 @@ namespace Smartfy.Core.Services.Messages
 {
     public class MessageService : IMessageService
     {
-        private Configuration _configuration;
         private MessageBroker _messageBroker;
         private RouteCollection _routes;
         public MessageService(Configuration configuration)
         {
-            _configuration = configuration;
             _messageBroker = new MessageBroker();
-            _routes = new RouteCollection(new RouteRepository(configuration));
-            _messageBroker.AddPublishStrategy<GroupOutputMessage>(new PublishByGroupStrategy(_routes));
+            _routes = new RouteCollection(new RouteConfigurationRepository(configuration));
+            _messageBroker.AddPublishStrategy<GroupOutputMessage>(new PublishByRouteStrategy(_routes));
         }
 
         public RouteCollection Routes

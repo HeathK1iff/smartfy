@@ -3,11 +3,11 @@ using Smartfy.Core.Messages.Strategies.Utils;
 
 namespace Smartfy.Core.Messages.Strategies
 {
-    public class PublishByGroupStrategy : IPublishStrategy
+    public class PublishByRouteStrategy : IPublishStrategy
     {
         private readonly RouteCollection _routes;
 
-        public PublishByGroupStrategy(RouteCollection routes)
+        public PublishByRouteStrategy(RouteCollection routes)
         {
             _routes = routes;
         }
@@ -28,17 +28,20 @@ namespace Smartfy.Core.Messages.Strategies
             
             foreach (var group in outMsg?.RecepientGroups ?? Array.Empty<string>())
             {
-                var recepients = _routes.GetAll().Where(f => f.Group.Equals(group, StringComparison.InvariantCultureIgnoreCase));
-                if (!recepients.Any())
+                var routes = _routes.GetAll().Where(f => f.Group.Equals(group, StringComparison.InvariantCultureIgnoreCase));
+                if (!routes.Any())
                     continue;
 
                 foreach (var subscriber in outSubscribers)
                 {
-                    foreach (var recepient in recepients)
+                    foreach (var route in routes)
                     {
+                        if (string.IsNullOrEmpty(route.Recepient))
+                            continue;
+
                         subscriber.OnReceived(new OutputMessage()
                         {
-                            Recepient = recepient.Recepient,
+                            Recepient = route.Recepient,
                             Data = message.Data
                         });
                     }

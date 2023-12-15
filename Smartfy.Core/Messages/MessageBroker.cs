@@ -1,6 +1,6 @@
 ﻿using Smartfy.Core.Entities;
+using Smartfy.Core.Exceptions;
 using Smartfy.Core.Messages.Strategies;
-using Smartfy.Core.Utils;
 
 namespace Smartfy.Core.Messages
 {
@@ -8,11 +8,20 @@ namespace Smartfy.Core.Messages
     {
         private Dictionary<Type, List<IMessageSubscriber>> _subscribers = new();
         private Dictionary<Type, IPublishStrategy> _strategy = new();
-        private readonly IPublishStrategy _defaultStrategy = new PublishAllStrategy();
+        private readonly IPublishStrategy _defaultStrategy;
+
+        public MessageBroker(IPublishStrategy defaultStrategy)
+        {
+            _defaultStrategy = defaultStrategy;
+        }
+
+        public MessageBroker() : this(new PublishAllStrategy())
+        { 
+        }
 
         private IPublishStrategy GetPublishStrategy(Type type)
         {
-            if (_strategy.TryGetValue(type, out var strategy))
+            if (GetStrategies().TryGetValue(type, out var strategy))
             {
                 return strategy;
             }
@@ -22,10 +31,13 @@ namespace Smartfy.Core.Messages
 
         public void AddPublishStrategy<T>(IPublishStrategy strategy) where T : Message
         {
-            if (!_strategy.ContainsKey(typeof(T)))
+            if (!GetStrategies().ContainsKey(typeof(T)))
             {
-                _strategy.Add(typeof(T), strategy);
+                GetStrategies().Add(typeof(T), strategy);
+                return;
             }
+
+            throw new StrategyAlreadyRegisteredException();
         }
 
         public void Publish<T>(T message) where T : Message
@@ -36,37 +48,68 @@ namespace Smartfy.Core.Messages
             }
 
             var strategy = GetPublishStrategy(typeof(T));
-            strategy.PublishAll(message, _subscribers);
+            strategy.PublishAll(message, GetSubscribers());
         }
 
         public IDisposable Subscribe<T>(IMessageSubscriber subscriber) where T : Message
         {
-            if (!_subscribers.TryGetValue(typeof(T), out var list))
+            if (subscriber is null)
+            {
+                throw new ArgumentNullException("Subscriber should not empty or null");
+            }
+
+            if (!GetSubscribers().TryGetValue(typeof(T), out var list))
             {
                 list = new List<IMessageSubscriber>();
-                _subscribers.Add(typeof(T), list);
+                GetSubscribers().Add(typeof(T), list);
             }
 
             list.Add(subscriber);
-            return new Unsubscriber(list, subscriber);
+
+            return new Unsubscriber(typeof(T), (type, item) => {
+                RemoveSubscriber(type, item);
+            }, subscriber);
+        }
+
+        private void RemoveSubscriber(System.Type type, IMessageSubscriber subscriber)
+        {
+            if (GetSubscribers().TryGetValue(type, out var list))
+            {
+                list.Remove(subscriber);
+
+                if (list.Count == 0)
+                {
+                    GetSubscribers().Remove(type);
+                }
+            }
+        }
+
+        protected Dictionary<Type, IPublishStrategy> GetStrategies()
+        {
+            return _strategy;
+        }
+
+        protected Dictionary<Type, List<IMessageSubscriber>> GetSubscribers()
+        {
+            return _subscribers;
         }
 
         class Unsubscriber : IDisposable
         {
-            private List<IMessageSubscriber> _list;
+            private System.Type _type;
+            private Action<System.Type, IMessageSubscriber> _deleteAction;
             private IMessageSubscriber _item;
-            public Unsubscriber(List<IMessageSubscriber> list, IMessageSubscriber item)
+            public Unsubscriber(System.Type type, Action<System.Type, IMessageSubscriber> deleteAction, IMessageSubscriber item)
             {
+                _type = type;
+                _deleteAction = deleteAction;
                 _item = item;
-                _list = list;
             }
 
             public void Dispose()
             {
-                _list.Remove(_item);
-#pragma warning disable CS8625 // Cannot convert null literal to non-nullable reference type.
+                _deleteAction(_type, _item);
                 _item = null;
-#pragma warning restore CS8625 // Cannot convert null literal to non-nullable reference type.
             }
         }
     }

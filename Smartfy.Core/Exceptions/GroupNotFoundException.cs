@@ -9,7 +9,7 @@ namespace Smartfy.Core.Exceptions
         {
         }
 
-        public GroupNotFoundException(string? message) : base(message)
+        public GroupNotFoundException(string? groupName) : base($"Group {groupName} is not found")
         {
         }
 

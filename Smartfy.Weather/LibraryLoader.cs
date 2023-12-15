@@ -15,7 +15,8 @@ namespace Smartfy.TelegramBot
             ILoggerFactory loggerFactory, 
             IServiceCollection services)
         {
-            services.AddService<IWeatherService>(new WeatherService(new WeatherConfigurationAdapter(configuration), loggerFactory.CreateLogger<WeatherService>(), services));
+            services.AddService<IWeatherService>(new WeatherService(new WeatherConfigurationAdapter(configuration), 
+                loggerFactory.CreateLogger<WeatherService>(), services));
         }
     }
 }

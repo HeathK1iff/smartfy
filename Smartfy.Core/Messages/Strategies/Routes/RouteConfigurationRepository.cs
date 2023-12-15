@@ -4,15 +4,16 @@ using Smartfy.Core.Utils;
 
 namespace Smartfy.Core.Messages.Strategies.Utils
 {
-    public class RouteRepository : IRouteRepository
+    public class RouteConfigurationRepository : IRouteRepository
     {
+        private static string SectionName = "routes";
         private readonly Configuration _configuration;
         private RoutesConfiguration _section;
 
-        public RouteRepository(Configuration configuration) 
+        public RouteConfigurationRepository(Configuration configuration) 
         {
             _configuration = configuration;
-            _section = _configuration.GetOrCreateSection<RoutesConfiguration>("routes", item =>
+            _section = _configuration.GetOrCreateSection<RoutesConfiguration>(SectionName, item =>
             {
                 item.Groups.Add(new GroupElement()
                 {
@@ -82,7 +83,7 @@ namespace Smartfy.Core.Messages.Strategies.Utils
                 return;
             }
 
-            throw new GroupNotFoundException("");
+            throw new GroupNotFoundException(route.Group);
         }
     }
 }

@@ -24,9 +24,9 @@ namespace Smartfy.Runner
             _configuration = ConfigurationManager.OpenExeConfiguration(ConfigurationUserLevel.None);
             _loggerFactory = LoggerFactory.Create(builder =>
             {
-                builder.AddConsole();
-                builder.AddFile("smartfy.log");
-                builder.SetMinimumLevel(LogLevel.Debug);
+                //builder.AddConsole();
+                builder.SetMinimumLevel(LogLevel.Trace);
+                builder.AddFile("smartfy.log", LogLevel.Debug);
             });
 
             _services.AddService<IMessageService>(new MessageService(_configuration));
@@ -45,8 +45,10 @@ namespace Smartfy.Runner
             _services.GetService<ITaskService>().Add(new PeriodicalTask(18, 0, weatherTask));
 
             var dailyMarkTask = new DailyMarksTask(_services, _loggerFactory.CreateLogger<DailyMarksTask>());
-            _services.GetService<ITaskService>().Add(new PeriodicalTask(15, 0, dailyMarkTask));
             _services.GetService<ITaskService>().Add(new PeriodicalTask(19, 0, dailyMarkTask));
+
+            var publicCalendarTask = new PublicCalendarTask(_services, _loggerFactory.CreateLogger<PublicCalendarTask>());
+            _services.GetService<ITaskService>().Add(new PeriodicalTask(8, 0, publicCalendarTask));
         }
     }
 }

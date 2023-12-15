@@ -12,7 +12,7 @@ namespace Smartfy.Runner.Tasks
     internal class WeatherTask : ITask
     {
         private static string WeatherRecepientGroup = "weather"; 
-        private ILogger? _logger;
+        private ILogger _logger;
         private IServiceCollection _services;
 
         public WeatherTask(IServiceCollection services, ILogger logger)
@@ -60,7 +60,7 @@ namespace Smartfy.Runner.Tasks
         {
             var hour = GetCurrentTime().Hour;
 
-            _logger?.LogDebug($"Sunrise time = {sunrise.ToShortTimeString()}");
+            _logger.LogDebug($"Sunrise time = {sunrise.ToShortTimeString()}");
 
             if ((hour >= sunrise.Hour) && (hour < 10))
             {

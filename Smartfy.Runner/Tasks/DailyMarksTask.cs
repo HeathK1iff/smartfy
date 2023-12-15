@@ -1,5 +1,4 @@
-﻿using EduRk.Entity;
-using Microsoft.Extensions.Logging;
+﻿using Microsoft.Extensions.Logging;
 using Smartfy.Core.Entities;
 using Smartfy.Core.Messages.Strategies.Utils;
 using Smartfy.Core.Services;

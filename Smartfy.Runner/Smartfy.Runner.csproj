@@ -16,6 +16,7 @@
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\Smartfy.Calendar\Smartfy.Calendar.csproj" />
     <ProjectReference Include="..\Smartfy.Core\Smartfy.Core.csproj" />
     <ProjectReference Include="..\Smartfy.Education\Smartfy.Education.csproj" />
     <ProjectReference Include="..\Smartfy.Mqtt\Smartfy.Mqtt.csproj" />

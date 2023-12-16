@@ -1,6 +1,6 @@
 ﻿namespace Smartfy.Calendar.Entity
 {
-    public enum TypeOfDayEnum { Birthday, FamilyDate, Event, PublicHoliday, PaymentDate }
+    public enum TypeOfDayEnum { Birthday, FamilyDate, Event, Holiday, PaymentDate }
     public abstract class CalendarDay
     {
         public CalendarDay(string description, TypeOfDayEnum typeOfDay)

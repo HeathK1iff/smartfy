@@ -1,9 +1,8 @@
 ﻿using Microsoft.Extensions.Logging;
 using Smartfy.Calendar.Entity;
+using Smartfy.Calendar.Exception;
 using Smartfy.Calendar.Utils;
-using Smartfy.Core.Messages.Strategies.Utils;
 using Smartfy.Core.Services;
-using System.Collections;
 
 namespace Smartfy.Calendar.Services
 {
@@ -12,6 +11,7 @@ namespace Smartfy.Calendar.Services
         private IDayRepository _repository;
         private ILogger<CalendarService> _logger;
         private IServiceCollection _services;
+        private List<CalendarDay> _days = new List<CalendarDay>();
 
         public CalendarService(IDayRepository repository, ILogger<CalendarService> logger, IServiceCollection services)
         {
@@ -25,21 +25,33 @@ namespace Smartfy.Calendar.Services
             return new CalendarDayFactory();
         }
 
-        public CalendarDay[] GetCalendarDaysForDate(DateTime date)
+
+        public void Refresh()
         {
-            var result = new List<CalendarDay>();
-            
+            _days.Clear();
+
             foreach (var day in _repository.GetAll())
             {
-                var calendarDay = GetCalendarDayFactory().Create(day);
-
-                if (calendarDay.IsDay(date))
+                try
                 {
-                    result.Add(calendarDay);
+                    var calendarDay = GetCalendarDayFactory().Create(day);
+                    _days.Add(calendarDay);
+                }
+                catch (ArgumentParceException e)
+                {
+                    _logger.LogError(e.Message, e);
                 }
             }
+        }
 
-            return result.ToArray();
+        public CalendarDay[] GetCalendarDaysForDate(DateTime date)
+        {
+            if (_days.Count == 0)
+            {
+                Refresh();
+            }
+
+            return _days.Where(f => f.IsDay(date)).ToArray();
         }
     }
 }

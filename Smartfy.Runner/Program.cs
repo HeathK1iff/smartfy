@@ -45,7 +45,7 @@ namespace Smartfy.Runner
             _services.GetService<ITaskService>().Add(new PeriodicalTask(18, 0, weatherTask));
 
             var dailyMarkTask = new DailyMarksTask(_services, _loggerFactory.CreateLogger<DailyMarksTask>());
-            _services.GetService<ITaskService>().Add(new PeriodicalTask(19, 0, dailyMarkTask));
+            _services.GetService<ITaskService>().Add(new PeriodicalTask(18, 0, dailyMarkTask));
 
             var publicCalendarTask = new PublicCalendarTask(_services, _loggerFactory.CreateLogger<PublicCalendarTask>());
             _services.GetService<ITaskService>().Add(new PeriodicalTask(8, 0, publicCalendarTask));

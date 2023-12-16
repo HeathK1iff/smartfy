@@ -6,9 +6,9 @@ namespace Smartfy.Calendar.Utils
 {
     public class CalendarDayFactory : ICalendarDayFactory
     {
-        private static string FixedDayRegexTemplate = @"^([0-9]{2})\/([0-9]{2})\/([2-9][0-9]{3})$";
-        private static string YearDayRegexTemplate = @"^([0-9]{2})\/([0-9]{2})\/\*$";
-        private static string MonthDayRegexTemplate = @"^([0-9]{2})\/\*\/\*$";
+        private static string FixedDayRegexTemplate = @"^([0-9]{1,2})\/([0-9]{1,2})\/([2-9][0-9]{3})$";
+        private static string YearDayRegexTemplate = @"^([0-9]{1,2})\/([0-9]{1,2})\/\*$";
+        private static string MonthDayRegexTemplate = @"^([0-9]{1,2})\/\*\/\*$";
 
         public CalendarDayFactory()
         {
@@ -70,11 +70,11 @@ namespace Smartfy.Calendar.Utils
                 case "birthday": return TypeOfDayEnum.Birthday;
                 case "family-date": return TypeOfDayEnum.FamilyDate;
                 case "event": return TypeOfDayEnum.Event;
-                case "public-holiday": return TypeOfDayEnum.PublicHoliday;
+                case "holiday": return TypeOfDayEnum.Holiday;
                 case "payment-date": return TypeOfDayEnum.PaymentDate;
             }
 
-            throw new ArgumentParceException("type");
+            throw new ArgumentParceException($"The type ({type}) is not registered");
         }
 
     }

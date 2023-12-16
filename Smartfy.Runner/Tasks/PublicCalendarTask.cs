@@ -25,13 +25,28 @@ namespace Smartfy.Runner.Tasks
         public bool Exeсute()
         {
             var messageService = _services.GetService<IMessageService>();
+            _services.GetService<ICalendarService>().Refresh();
             var calendarDays = _services.GetService<ICalendarService>().GetCalendarDaysForDate(DateTime.Today);
 
             var messageBuilder = new StringBuilder();
-            messageBuilder.AppendLine("Сегодня:");
-            foreach (var day in calendarDays)
+            
+            if (calendarDays.Length > 0)
             {
-                messageBuilder.AppendLine($"{TypeOfDayToSymbol(day.TypeOfDay)}: {day.Description}");
+                messageBuilder.AppendLine("Сегодня:");
+                foreach (var day in calendarDays)
+                {
+                    messageBuilder.AppendLine($"{TypeOfDayToSymbol(day.TypeOfDay)} {day.Description}");
+                }
+            }
+
+            var tomorrowCalendarDays = _services.GetService<ICalendarService>().GetCalendarDaysForDate(DateTime.Today.AddDays(1));
+            if (tomorrowCalendarDays.Length > 0)
+            {
+                messageBuilder.AppendLine("Завтра:");
+                foreach (var day in tomorrowCalendarDays)
+                {
+                    messageBuilder.AppendLine($"{TypeOfDayToSymbol(day.TypeOfDay)} {day.Description}");
+                }
             }
 
             _services.GetService<IMessageService>().Routes.AddRouteIfNotExist(new Route()
@@ -40,7 +55,7 @@ namespace Smartfy.Runner.Tasks
                 Recepient = ""
             });
 
-            var success = calendarDays.Length > 0;
+            var success = calendarDays.Length > 0 || tomorrowCalendarDays.Length > 0;
 
             if (success)
             {
@@ -64,7 +79,7 @@ namespace Smartfy.Runner.Tasks
                 case TypeOfDayEnum.Birthday: return "🎂";
                 case TypeOfDayEnum.FamilyDate: return "🎉";
                 case TypeOfDayEnum.PaymentDate: return "💵";
-                case TypeOfDayEnum.PublicHoliday: return "🏖";
+                case TypeOfDayEnum.Holiday: return "🏖";
                 case TypeOfDayEnum.Event: return "🎇";
             }
             return string.Empty;

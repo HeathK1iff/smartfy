@@ -5,6 +5,7 @@ namespace Smartfy.Calendar.Services
 {
     public interface ICalendarService : IService
     {
-        public CalendarDay[] GetCalendarDaysForDate(DateTime date);
+        CalendarDay[] GetCalendarDaysForDate(DateTime date);
+        void Refresh();
     }
 }

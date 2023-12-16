@@ -117,7 +117,7 @@ namespace Smartfy.Calendar.Utils.Tests
                 case "birthday": return TypeOfDayEnum.Birthday;
                 case "family-date": return TypeOfDayEnum.FamilyDate;
                 case "event": return TypeOfDayEnum.Event;
-                case "public-holiday": return TypeOfDayEnum.PublicHoliday;
+                case "public-holiday": return TypeOfDayEnum.Holiday;
                 case "payment-date": return TypeOfDayEnum.PaymentDate;
             }
 

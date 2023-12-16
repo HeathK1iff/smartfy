@@ -31,11 +31,13 @@ namespace Smartfy.Runner.Tasks
             var messageBuilder = new StringBuilder();
             messageBuilder.AppendLine(GetTitleByCurrentTime(weatherService.Sunrise));
             messageBuilder.AppendLine($"На улице сейчас {GetCloudStatusByPercent(weatherService.Current.Clouds.Value)}:");
-            messageBuilder.AppendLine($"Температура: {weatherService.Current.Temperature.Value} °C");
-            messageBuilder.AppendLine($"Влажность: {weatherService.Current.Humidity.Value} %");
-            messageBuilder.AppendLine($"Давление: {weatherService.Current.Pressure.Value} гПа");
-            messageBuilder.AppendLine($"Ветер: {weatherService.Current.Wind.Value} м/c");
-
+            messageBuilder.AppendLine($"🌡 Температура: {weatherService.Current.Temperature.Value} °C");
+            messageBuilder.AppendLine($"🎚Влажность: {weatherService.Current.Humidity.Value} %");
+            messageBuilder.AppendLine($"⚗️Давление: {weatherService.Current.Pressure.Value} гПа");
+            if (weatherService.Current.Wind.Value > 0)
+            {
+                messageBuilder.AppendLine($"💨Ветер: {weatherService.Current.Wind.Value} м/c");
+            }
             _services.GetService<IMessageService>().Routes.AddRouteIfNotExist(new Route()
             {
                 Group = WeatherRecepientGroup,
@@ -84,24 +86,24 @@ namespace Smartfy.Runner.Tasks
         {
             if ((percent >= 10) && (percent < 35))
             {
-                return "малооблачно";
+                return "малооблачно 🌤";
             }
             else
             if ((percent >= 35) && (percent < 70))
             {
-                return "переменная облачность";
+                return "переменная облачность ⛅️";
             }
             else
             if ((percent >= 80) && (percent < 90))
             {
-                return "облачно c прояснениями";
+                return "облачно c прояснениями ⛅️";
             }
             if ((percent >= 90) && (percent <= 100))
             {
-                return "облачно";
+                return "облачно ☁️";
             }
 
-            return "ясно";
+            return "ясно ☀️";
         }
     }
 }

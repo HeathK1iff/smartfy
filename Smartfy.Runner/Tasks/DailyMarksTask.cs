@@ -27,7 +27,7 @@ namespace Smartfy.Runner.Tasks
             var dailyMarks = _services.GetService<IEducationService>().GetDailyMarks();
 
             var messageBuilder = new StringBuilder();
-            messageBuilder.AppendLine("Отчет по школе:");
+            messageBuilder.AppendLine("🏫 Отчет по школе:");
             foreach (var mark in dailyMarks)
             {
                 messageBuilder.AppendLine($"{mark.Subject} : {mark.Mark}");

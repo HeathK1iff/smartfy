@@ -47,7 +47,7 @@ namespace Smartfy.Weather.Provider
             Sunrise = weatherData.DayInfo.Sunrise.AddHours(_timeZone);
             Sunset = weatherData.DayInfo.Sunset.AddHours(_timeZone);
 
-            _logger.LogDebug($"Sunrise={Sunrise.ToLongDateString};Sunset={Sunset.ToLongDateString};");
+            _logger.LogDebug($"Sunrise={Sunrise.ToLongDateString()};Sunset={Sunset.ToLongDateString()};");
             _logger.LogDebug($"Temp={Current.Temperature};Hum={Current.Humidity};"+
                 $"Pres={Current.Pressure};Clouds={Current.Clouds};IsRaid={Current.IsRain};Wind={Current.Wind}");
 
@@ -72,7 +72,7 @@ namespace Smartfy.Weather.Provider
                     Pressure = forecast.WeatherDayInfo.Pressure,
                     Wind = forecast.Wind.Speed
                 };
-                _logger.LogDebug($"Date={Forecast[i].Date.ToLongDateString};Temp={Forecast[i].Temperature};"+
+                _logger.LogDebug($"Date={Forecast[i].Date.ToLongDateString()};Temp={Forecast[i].Temperature};"+
                                  $"Hum={Forecast[i].Humidity};Rain={Forecast[i].IsRain};"+
                                  $"Clouds={Forecast[i].Clouds};Pressure={Forecast[i].Pressure};Wind={Forecast[i].Wind}");
 

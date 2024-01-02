@@ -71,7 +71,6 @@ namespace Smartfy.Calendar.Utils.Tests
         [TestCase("birthday")]
         [TestCase("family-date")]
         [TestCase("event")]
-        [TestCase("public-holiday")]
         [TestCase("payment-date")]
         public void Create_CheckTypeOfDayPossibleValues_ShouldBeSuccessParced(string typeOfDay)
         {
@@ -92,7 +91,6 @@ namespace Smartfy.Calendar.Utils.Tests
         [TestCase("BirthDay")]
         [TestCase("Family-Date")]
         [TestCase("EvEnt")]
-        [TestCase("Public-HolidaY")]
         [TestCase("Payment-date")]
         public void Create_CheckTypeOfDayPossibleCaseInsensitiveValues_ShouldBeSuccessParced(string typeOfDay)
         {

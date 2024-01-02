@@ -7,9 +7,9 @@ using System.Configuration;
 
 namespace Smartfy.TelegramBot
 {
-    public sealed class LibraryLoader
+    public static class Library
     {
-        public static void CreateService(System.Configuration.Configuration configuration, 
+        public static void Init(System.Configuration.Configuration configuration, 
             ILoggerFactory loggerFactory, 
             IServiceCollection services)
         {

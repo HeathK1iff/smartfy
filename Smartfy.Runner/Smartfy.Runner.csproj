@@ -18,6 +18,7 @@
   <ItemGroup>
     <ProjectReference Include="..\Smartfy.Calendar\Smartfy.Calendar.csproj" />
     <ProjectReference Include="..\Smartfy.Core\Smartfy.Core.csproj" />
+    <ProjectReference Include="..\Smartfy.Device\Smartfy.Device.csproj" />
     <ProjectReference Include="..\Smartfy.Education\Smartfy.Education.csproj" />
     <ProjectReference Include="..\Smartfy.Mqtt\Smartfy.Mqtt.csproj" />
     <ProjectReference Include="..\Smartfy.TelegramBot\Smartfy.TelegramBot.csproj" />

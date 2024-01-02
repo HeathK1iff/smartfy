@@ -1,5 +1,4 @@
 ﻿using Smartfy.Core.Utils;
-using Smartfy.Education.Configuration;
 using Smartfy.Education.Configuration.Impl;
 
 namespace Smartfy.Education.Configuration.Utils

@@ -4,7 +4,7 @@ using Smartfy.Core.Messages.Strategies;
 
 namespace Smartfy.Core.Messages
 {
-    public class MessageBroker : IMessageBroker
+    internal class MessageBroker : IMessageBroker
     {
         private Dictionary<Type, List<IMessageSubscriber>> _subscribers = new();
         private Dictionary<Type, IPublishStrategy> _strategy = new();

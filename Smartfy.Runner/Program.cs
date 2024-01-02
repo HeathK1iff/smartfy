@@ -16,17 +16,21 @@ namespace Smartfy.Runner
         {
             var program = new Program();
             program.RunService();
+            var evt = new ManualResetEvent(false);
+            evt.WaitOne();
+
         }
 
         public Program()
         {
             _services = new Services();
             _configuration = ConfigurationManager.OpenExeConfiguration(ConfigurationUserLevel.None);
+
             _loggerFactory = LoggerFactory.Create(builder =>
             {
-                //builder.AddConsole();
+                builder.AddConsole();
                 builder.SetMinimumLevel(LogLevel.Trace);
-                builder.AddFile("smartfy.log", LogLevel.Debug);
+                builder.AddFile("smartfy.log", LogLevel.Trace);
             });
 
             _services.AddService<IMessageService>(new MessageService(_configuration));
@@ -35,9 +39,10 @@ namespace Smartfy.Runner
 
         public void RunService()
         {
-            var libraryLoader = new LibraryLoader(AppDomain.CurrentDomain.BaseDirectory,
+            var libraryLoader = new ExternalLibraryLoader(_loggerFactory, "Library", "Init");
+
+            libraryLoader.LoadAndInitAll(AppDomain.CurrentDomain.BaseDirectory,
                 _configuration, _loggerFactory, _services);
-            libraryLoader.LoadAll();
 
             var weatherTask = new WeatherTask(_services, _loggerFactory.CreateLogger<WeatherTask>());
             _services.GetService<ITaskService>().Add(new PeriodicalTask(7, 0, weatherTask));

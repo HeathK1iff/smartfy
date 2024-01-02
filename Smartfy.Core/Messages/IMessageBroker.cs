@@ -2,7 +2,7 @@
 
 namespace Smartfy.Core.Messages
 {
-    public interface IMessageBroker
+    internal interface IMessageBroker
     {
         void Publish<T>(T message) where T : Message;
 

@@ -6,11 +6,12 @@ namespace Smartfy.Device.Entity
 {
     public abstract class BaseDevice : IMessageSubscriber
     {        
-        public BaseDevice(IMessageService messageService, Guid id, string vendor, string model, string connectionString) 
+        public BaseDevice(IMessageService messageService, Guid id, string vendor, string model, string location, string connectionString) 
         {
             Id = id;
             Vendor = vendor;
             Model = model;
+            Location = location;
             ConnectionString = connectionString;
         }
 
@@ -24,12 +25,12 @@ namespace Smartfy.Device.Entity
 
         public static BaseDevice CreateEmptyDevice()
         {
-            return new EmptyDevice(null, Guid.Empty, string.Empty, string.Empty, string.Empty);
+            return new EmptyDevice(null, Guid.Empty, string.Empty, string.Empty, string.Empty, string.Empty);
         }
 
         private class EmptyDevice : BaseDevice
         {
-            public EmptyDevice(IMessageService broker, Guid id, string vendor, string model, string connectionString) : base(broker, id, vendor, model, connectionString)
+            public EmptyDevice(IMessageService broker, Guid id, string vendor, string model, string location, string connectionString) : base(broker, id, vendor, model, location, connectionString)
             {
             }
 

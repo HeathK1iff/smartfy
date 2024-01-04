@@ -5,12 +5,12 @@ using Smartfy.Device.Entity;
 using Smartfy.Mqtt.Entity;
 using System.Text.Json;
 
-namespace Smartfy.Device.Xiaomi
+namespace Smartfy.Device.Xiaomi.Devices
 {
     public abstract class XiaomiBase : BaseDevice, IBattery, IBatteryVoltage, ILinkQuality
     {
         protected readonly ILogger _logger;
-        protected XiaomiBase(IMessageService messageService, Guid id, string vendor, string model, string connectionString) : base(messageService, id, vendor, model, connectionString)
+        protected XiaomiBase(IMessageService messageService, Guid id, string vendor, string model, string location, string connectionString) : base(messageService, id, vendor, model, location, connectionString)
         {
             messageService.Subscribe<MqttMessage>(this);
             _logger = Device.LoggerFactory.CreateLogger<XiaomiBase>();

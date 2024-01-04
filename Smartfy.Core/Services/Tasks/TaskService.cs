@@ -11,12 +11,16 @@ namespace Smartfy.Core.Services.Tasks
         {
             _loggerFactory = loggerFactory;  
             _dispatcher = new TaskDispatcher(_loggerFactory.CreateLogger<TaskDispatcher>());
-            _dispatcher.Run();
         }
 
         public void Add(ITask task)
         {
             _dispatcher.Add(task);
+        }
+
+        public void Start()
+        {
+            _dispatcher.Start();
         }
     }
 }

@@ -22,12 +22,14 @@ namespace Smartfy.Core.Services.Tasks
             _tasks.Enqueue(task);
         }
 
-        public void Run()
+        public void Start()
         {
             var thread = new Thread((object? obj) =>
             {
                 if (obj is CancellationToken token)
                 {
+                    _logger.LogInformation($"TaskDispatcher is started");
+
                     using (var resetEvent = new PeriodicalManualResetEvent(false, _interval))
                     {
                         while (!token.IsCancellationRequested)

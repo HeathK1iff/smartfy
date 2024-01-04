@@ -36,7 +36,7 @@ namespace Smartfy.Device.Utils
             _logger.LogInformation($"Registered device class for {vendor}:{model}");
         }
 
-        public BaseDevice CreateDevice(Guid id, string vendor, string model, string connectionString)
+        public BaseDevice CreateDevice(Guid id, string vendor, string model, string location, string connectionString)
         {
             var key = CreateKey(vendor, model);
 
@@ -46,7 +46,7 @@ namespace Smartfy.Device.Utils
             }
 
             _logger.LogInformation($"Created device for {vendor}:{model}:{id.ToString()}");
-            return Activator.CreateInstance(type, _broker, id, vendor, model, connectionString) as BaseDevice ?? BaseDevice.CreateEmptyDevice();
+            return Activator.CreateInstance(type, _broker, id, vendor, model, location, connectionString) as BaseDevice ?? BaseDevice.CreateEmptyDevice();
         }
 
         private Tuple<string, string> CreateKey(string vendor, string model)

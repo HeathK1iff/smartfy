@@ -12,7 +12,19 @@
 
         public override T GetValue()
         {
-            return _values.Peek().GetValue();
+            IValue<T> lastValue = default(IValue<T>);
+            try
+            {
+                lastValue = _values.Peek();
+            } catch (InvalidOperationException e)
+            { 
+            }
+
+            if (lastValue != null)
+            {
+                return lastValue.GetValue();
+            }
+            return default(T);
         }
 
         public override void SetValue(T value)

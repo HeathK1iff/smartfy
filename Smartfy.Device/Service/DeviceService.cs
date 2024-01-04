@@ -1,7 +1,5 @@
 ﻿using Smartfy.Device.Utils;
 using Smartfy.Device.Entity;
-using System.Numerics;
-using System.Reflection;
 using Microsoft.Extensions.Logging;
 
 namespace Smartfy.Device.Service
@@ -30,7 +28,7 @@ namespace Smartfy.Device.Service
                     _logger.LogInformation($"Id is not defined. Created a new {deviceId} for {item.Vendor}:{item.Model}");
                 }
 
-                _devices.Add(_factory.CreateDevice(deviceId, item.Vendor, item.Model, item.ConnectionString));
+                _devices.Add(_factory.CreateDevice(deviceId, item.Vendor, item.Model, item.Location, item.ConnectionString));
             }
         }
    
@@ -44,7 +42,7 @@ namespace Smartfy.Device.Service
             _devices.Remove(device);
         }
 
-        public BaseDevice Create(string vendor, string model, string connectionString)
+        public BaseDevice Create(string vendor, string model, string location, string connectionString)
         {
             Guid newGuid = Guid.NewGuid();
             var newDefenition = new DeviceDef()
@@ -55,7 +53,7 @@ namespace Smartfy.Device.Service
                 ConnectionString = connectionString
             };
 
-            var newDevice = _factory.CreateDevice(newGuid, vendor, model, connectionString);
+            var newDevice = _factory.CreateDevice(newGuid, vendor, model, location, connectionString);
             _repository.Add(newDefenition);
 
             return newDevice;

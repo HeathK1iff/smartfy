@@ -3,6 +3,7 @@ using Microsoft.Extensions.Logging;
 using Smartfy.Core.Services;
 using Smartfy.Core.Services.Messages;
 using Smartfy.Core.Services.Tasks;
+using Smartfy.Device.Service;
 using Smartfy.Runner.Tasks;
 
 namespace Smartfy.Runner
@@ -16,9 +17,6 @@ namespace Smartfy.Runner
         {
             var program = new Program();
             program.RunService();
-            var evt = new ManualResetEvent(false);
-            evt.WaitOne();
-
         }
 
         public Program()
@@ -45,15 +43,22 @@ namespace Smartfy.Runner
                 _configuration, _loggerFactory, _services);
 
             var weatherTask = new WeatherTask(_services, _loggerFactory.CreateLogger<WeatherTask>());
-            _services.GetService<ITaskService>().Add(new PeriodicalTask(7, 0, weatherTask));
-            _services.GetService<ITaskService>().Add(new PeriodicalTask(13, 0, weatherTask));
-            _services.GetService<ITaskService>().Add(new PeriodicalTask(18, 0, weatherTask));
+            _services.GetService<ITaskService>().Add(new PeriodicalTask(7, 0, weatherTask, _loggerFactory.CreateLogger<PeriodicalTask>()));
+            _services.GetService<ITaskService>().Add(new PeriodicalTask(13, 0, weatherTask, _loggerFactory.CreateLogger<PeriodicalTask>()));
+            _services.GetService<ITaskService>().Add(new PeriodicalTask(18, 0, weatherTask, _loggerFactory.CreateLogger<PeriodicalTask>()));
+
+
+            var task = new SensorTask(_services, _loggerFactory.CreateLogger<WeatherTask>());
+            _services.GetService<ITaskService>().Add(new PeriodicalTask(10,52, task, _loggerFactory.CreateLogger<PeriodicalTask>()));
 
             var dailyMarkTask = new DailyMarksTask(_services, _loggerFactory.CreateLogger<DailyMarksTask>());
-            _services.GetService<ITaskService>().Add(new PeriodicalTask(18, 0, dailyMarkTask));
+           
+            _services.GetService<ITaskService>().Add(new PeriodicalTask(18, 0, dailyMarkTask, _loggerFactory.CreateLogger<PeriodicalTask>()));
 
             var publicCalendarTask = new PublicCalendarTask(_services, _loggerFactory.CreateLogger<PublicCalendarTask>());
-            _services.GetService<ITaskService>().Add(new PeriodicalTask(8, 0, publicCalendarTask));
+            _services.GetService<ITaskService>().Add(new PeriodicalTask(8, 0, publicCalendarTask, _loggerFactory.CreateLogger<PeriodicalTask>()));
+
+            _services.GetService<ITaskService>().Start();
         }
     }
 }

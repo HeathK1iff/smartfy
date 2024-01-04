@@ -2,21 +2,15 @@
 using Smartfy.Device.Entity;
 using System.Text.Json;
 
-namespace Smartfy.Device.Xiaomi
+namespace Smartfy.Device.Xiaomi.Devices
 {
-    public class WSDCGQ11LM : XiaomiBase, IHumidity, IPressure, ITemperature 
+    public class WSDCGQ01LM : XiaomiBase, IHumidity, ITemperature
     {
-        public WSDCGQ11LM(IMessageService messageService, Guid id, string vendor, string model, string connectionString) : base(messageService, id, vendor, model, connectionString)
-        {  
+        public WSDCGQ01LM(IMessageService messageService, Guid id, string vendor, string model, string location, string connectionString) : base(messageService, id, vendor, model, location, connectionString)
+        {
         }
 
         public TrackedValue<float> Humidity
-        {
-            get;
-            private set;
-        } = new TrackedValue<float>(10);
-
-        public TrackedValue<float> Pressure
         {
             get;
             private set;
@@ -31,7 +25,6 @@ namespace Smartfy.Device.Xiaomi
         protected override void ParceValue(JsonElement element)
         {
             Humidity.SetValue(element.GetProperty("humidity").GetSingle());
-            Pressure.SetValue(element.GetProperty("pressure").GetSingle());
             Temperature.SetValue(element.GetProperty("temperature").GetSingle());
         }
     }

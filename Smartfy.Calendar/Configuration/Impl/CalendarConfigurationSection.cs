@@ -4,16 +4,16 @@ namespace Smartfy.Calendar.Configuration.Impl
 {
     internal class CalendarConfigurationSection : ConfigurationSection
     {
-        [ConfigurationProperty("public_calendar")]
-        public string PublicCalendarFileName
+        [ConfigurationProperty("calendar")]
+        public string CalendarPath
         {
             get
             {
-                return this["public_calendar"] as string ?? string.Empty;
+                return this["calendar"] as string ?? string.Empty;
             }
             set
             {
-                this["public_calendar"] = value;
+                this["calendar"] = value;
             }
         }
     }

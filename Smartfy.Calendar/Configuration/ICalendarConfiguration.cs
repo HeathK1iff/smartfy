@@ -2,6 +2,6 @@
 {
     internal interface ICalendarConfiguration
     {
-        string PublicCalendarFileName { get; set; }
+        string CalendarPath { get; set; }
     }
 }

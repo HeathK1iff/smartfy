@@ -29,8 +29,8 @@ namespace Smartfy.Calendar.Services
         public void Refresh()
         {
             _days.Clear();
-
-            foreach (var day in _repository.GetAll())
+            var days = _repository.GetAll();
+            foreach (var day in days)
             {
                 try
                 {
@@ -42,7 +42,9 @@ namespace Smartfy.Calendar.Services
                     _logger.LogError(e.Message, e);
                 }
             }
+            _logger.LogInformation($"Calendar is loaded {days.Length}");
         }
+
 
         public CalendarDay[] GetCalendarDaysForDate(DateTime date)
         {

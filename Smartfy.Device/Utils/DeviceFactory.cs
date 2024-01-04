@@ -36,13 +36,13 @@ namespace Smartfy.Device.Utils
             _logger.LogInformation($"Registered device class for {vendor}:{model}");
         }
 
-        public BaseDevice CreateDevice(Guid id, string vendor, string model, string location, string connectionString)
+        public BaseDevice? CreateDevice(Guid id, string vendor, string model, string location, string connectionString)
         {
             var key = CreateKey(vendor, model);
 
             if (!_register.TryGetValue(key, out var type))
             {
-                throw new TypeNotFoundException();
+                return null;
             }
 
             _logger.LogInformation($"Created device for {vendor}:{model}:{id.ToString()}");

@@ -18,7 +18,10 @@ namespace Smartfy.Device.Xiaomi.Devices
 
         protected override void ParceValue(JsonElement element)
         {
-            Contact.SetValue(element.GetProperty("contact").GetBoolean());
+            if (element.TryGetProperty("contact", out var propContact))
+            {
+                Contact.SetValue(propContact.GetBoolean());
+            }
         }
     }
 }

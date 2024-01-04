@@ -14,7 +14,7 @@ namespace Smartfy.Calendar
         {
             var calendarConfiguration = new CalendarConfigurationAdapter(configuration);
 
-            services.AddService<ICalendarService>(new CalendarService(new JsonDayRepository(calendarConfiguration.PublicCalendarFileName, loggerFactory.CreateLogger<JsonDayRepository>()), 
+            services.AddService<ICalendarService>(new CalendarService(new JsonDayRepository(calendarConfiguration.CalendarPath, loggerFactory.CreateLogger<JsonDayRepository>()), 
                 loggerFactory.CreateLogger<CalendarService>(), services));
         }
     }

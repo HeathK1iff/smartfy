@@ -11,19 +11,26 @@ namespace Smartfy.Calendar.Configuration.Utils
         private readonly CalendarConfigurationSection _section;
 
         public CalendarConfigurationAdapter(System.Configuration.Configuration configuration)
-        { 
+        {
+            string basefolder = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "configuration");
+
+            if (!Directory.Exists(basefolder))
+            {
+                Directory.CreateDirectory(basefolder);
+            }
+
             _section = configuration.GetOrCreateSection<CalendarConfigurationSection>("calendar", init =>
             {
-                init.PublicCalendarFileName = "public_calendar.json";
+                init.CalendarPath = Path.Combine(basefolder, "calendar.json");
             });
         }
 
-        public string PublicCalendarFileName
+        public string CalendarPath
         {
-            get => _section.PublicCalendarFileName;
+            get => _section.CalendarPath;
             set
             {
-                _section.PublicCalendarFileName = value;
+                _section.CalendarPath = value;
             }
         }
     }

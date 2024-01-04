@@ -4,17 +4,17 @@ namespace Smartfy.Device.Configuration.Impl
 {
     public class DeviceConfigurationSection : ConfigurationSection, IDeviceConfiguration
     {
-        [ConfigurationProperty("path")]
-        public string Path 
+        [ConfigurationProperty("devices")]
+        public string DevicesPath 
         {
             get
             {
-                return this["path"] as string ?? string.Empty;
+                return this["devices"] as string ?? string.Empty;
             }
             
             set
             {
-                this["path"] = value;
+                this["devices"] = value;
             } 
         }
     }

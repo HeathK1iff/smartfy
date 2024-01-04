@@ -24,8 +24,15 @@ namespace Smartfy.Device.Xiaomi.Devices
 
         protected override void ParceValue(JsonElement element)
         {
-            Humidity.SetValue(element.GetProperty("humidity").GetSingle());
-            Temperature.SetValue(element.GetProperty("temperature").GetSingle());
+            if (element.TryGetProperty("humidity", out var propHumidity))
+            {
+                Humidity.SetValue(propHumidity.GetSingle());
+            }
+
+            if (element.TryGetProperty("temperature", out var propTemp))
+            {
+                Temperature.SetValue(propTemp.GetSingle());
+            }   
         }
     }
 }

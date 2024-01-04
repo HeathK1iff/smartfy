@@ -10,12 +10,12 @@ using Smartfy.DomainModel.Tasks.Utils;
 
 namespace Smartfy.Runner.Tasks
 {
-    public class SensorTask : ITask
+    public class HomeClimatTask : ITask
     {
         private IDeviceService _deviceService;
         private IMessageService _messageService;
         private ILogger _logger;
-        public SensorTask(IServiceCollection services, ILogger logger) 
+        public HomeClimatTask(IServiceCollection services, ILogger logger) 
         {
            _logger = logger;
            _deviceService = services.GetService<IDeviceService>();
@@ -42,12 +42,6 @@ namespace Smartfy.Runner.Tasks
                 if (hum != null)
                 {
                     groupsByLocation.Add(device.Location, $"Влажность: {hum.Humidity.GetValue()} %");
-                }
-
-                var press = device as IPressure;
-                if (press != null)
-                {
-                    groupsByLocation.Add(device.Location, $"Давление: {press.Pressure.GetValue()} гПа");
                 }
             }
 

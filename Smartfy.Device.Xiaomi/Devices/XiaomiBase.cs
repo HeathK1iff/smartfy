@@ -46,9 +46,20 @@ namespace Smartfy.Device.Xiaomi.Devices
 
             var parcedObject = JsonDocument.Parse(incomeMessage.Data);
 
-            Battery.SetValue(parcedObject.RootElement.GetProperty("battery").GetInt32());
-            BatteryVoltage.SetValue(parcedObject.RootElement.GetProperty("voltage").GetInt32());
-            LinkQuality.SetValue(parcedObject.RootElement.GetProperty("linkquality").GetInt32());
+            if (parcedObject.RootElement.TryGetProperty("battery", out var propBattery))
+            {
+                Battery.SetValue(propBattery.GetInt32());
+            }
+
+            if (parcedObject.RootElement.TryGetProperty("voltage", out var propVoltage))
+            {
+                BatteryVoltage.SetValue(propBattery.GetInt32());
+            }
+
+            if (parcedObject.RootElement.TryGetProperty("linkquality", out var prop))
+            {
+                LinkQuality.SetValue(prop.GetInt32());
+            }
 
             ParceValue(parcedObject.RootElement);
 

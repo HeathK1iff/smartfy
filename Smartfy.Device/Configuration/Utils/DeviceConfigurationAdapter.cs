@@ -9,8 +9,7 @@ namespace Smartfy.Device.Configuration.Utils
 
         public DeviceConfigurationAdapter(System.Configuration.Configuration configuration)
         {
-
-            string basefolder = System.IO.Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "device");
+            string basefolder = System.IO.Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "configuration");
 
             if (!Directory.Exists(basefolder))
             {
@@ -19,14 +18,14 @@ namespace Smartfy.Device.Configuration.Utils
 
             _section = configuration.GetOrCreateSection<DeviceConfigurationSection>("device", init =>
             {
-                init.Path = basefolder;
+                init.DevicesPath = System.IO.Path.Combine(basefolder, "devices.json");
             });
         }
 
-        public string Path 
+        public string DevicesPath 
         {
-            get => _section.Path; 
-            set => _section.Path = value; 
+            get => _section.DevicesPath; 
+            set => _section.DevicesPath = value; 
         }
     }
 }

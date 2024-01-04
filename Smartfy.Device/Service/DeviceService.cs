@@ -25,10 +25,14 @@ namespace Smartfy.Device.Service
                 if (!Guid.TryParse(item.Id, out var deviceId))
                 {
                     deviceId = Guid.NewGuid();
-                    _logger.LogInformation($"Id is not defined. Created a new {deviceId} for {item.Vendor}:{item.Model}");
+                    _logger.LogInformation($"Id is not defined. Generated a new Id ({deviceId}) for {item.Vendor}:{item.Model}");
                 }
 
-                _devices.Add(_factory.CreateDevice(deviceId, item.Vendor, item.Model, item.Location, item.ConnectionString));
+                var device = _factory.CreateDevice(deviceId, item.Vendor, item.Model, item.Location, item.ConnectionString);
+                if (device != null)
+                {
+                    _devices.Add(device);
+                }
             }
         }
    

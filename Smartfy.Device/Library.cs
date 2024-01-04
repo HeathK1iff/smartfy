@@ -19,9 +19,9 @@ namespace Smartfy.Device
             IDeviceFactory deviceFactory = new DeviceFactory(loggerFactory, messageService);
             
             var library = new ExternalLibraryLoader(loggerFactory, "Device", "Init");
-            library.LoadAndInitAll(config.Path, loggerFactory, deviceFactory);
+            library.LoadAndInitAll(AppDomain.CurrentDomain.BaseDirectory, loggerFactory, deviceFactory);
 
-            var repository = new DeviceRepository(new FileStream(Path.Combine(config.Path, "device.json"), FileMode.OpenOrCreate, FileAccess.ReadWrite));
+            var repository = new DeviceRepository(new FileStream(config.DevicesPath, FileMode.OpenOrCreate, FileAccess.ReadWrite));
             services.AddService<IDeviceService>(new DeviceService(loggerFactory, deviceFactory, repository));
         }
     }

@@ -21,15 +21,22 @@ namespace Smartfy.Runner
 
         public Program()
         {
-            _services = new Services();
             _configuration = ConfigurationManager.OpenExeConfiguration(ConfigurationUserLevel.None);
+
+            var logFolder = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "log");
+            if (!Directory.Exists(logFolder))
+            {
+                Directory.CreateDirectory(logFolder);
+            }
 
             _loggerFactory = LoggerFactory.Create(builder =>
             {
                 builder.AddConsole();
-                builder.SetMinimumLevel(LogLevel.Trace);
-                builder.AddFile("smartfy.log", LogLevel.Trace);
+                builder.SetMinimumLevel(LogLevel.Information);
+                builder.AddFile(Path.Combine(logFolder, "smartfy.log"), LogLevel.Information);
             });
+
+            _services = new Services(_loggerFactory.CreateLogger<Services>());
 
             _services.AddService<IMessageService>(new MessageService(_configuration));
             _services.AddService<ITaskService>(new TaskService(_loggerFactory));
@@ -48,11 +55,15 @@ namespace Smartfy.Runner
             _services.GetService<ITaskService>().Add(new PeriodicalTask(18, 0, weatherTask, _loggerFactory.CreateLogger<PeriodicalTask>()));
 
 
-            var task = new SensorTask(_services, _loggerFactory.CreateLogger<WeatherTask>());
-            _services.GetService<ITaskService>().Add(new PeriodicalTask(10,52, task, _loggerFactory.CreateLogger<PeriodicalTask>()));
+            var task = new HomeClimatTask(_services, _loggerFactory.CreateLogger<HomeClimatTask>());
+            _services.GetService<ITaskService>().Add(new PeriodicalTask(0, 0, task, _loggerFactory.CreateLogger<PeriodicalTask>()));
+            _services.GetService<ITaskService>().Add(new PeriodicalTask(4, 0, task, _loggerFactory.CreateLogger<PeriodicalTask>()));
+            _services.GetService<ITaskService>().Add(new PeriodicalTask(8, 0, task, _loggerFactory.CreateLogger<PeriodicalTask>()));
+            _services.GetService<ITaskService>().Add(new PeriodicalTask(12, 0, task, _loggerFactory.CreateLogger<PeriodicalTask>()));
+            _services.GetService<ITaskService>().Add(new PeriodicalTask(16, 0, task, _loggerFactory.CreateLogger<PeriodicalTask>()));
+            _services.GetService<ITaskService>().Add(new PeriodicalTask(20, 0, task, _loggerFactory.CreateLogger<PeriodicalTask>()));
 
             var dailyMarkTask = new DailyMarksTask(_services, _loggerFactory.CreateLogger<DailyMarksTask>());
-           
             _services.GetService<ITaskService>().Add(new PeriodicalTask(18, 0, dailyMarkTask, _loggerFactory.CreateLogger<PeriodicalTask>()));
 
             var publicCalendarTask = new PublicCalendarTask(_services, _loggerFactory.CreateLogger<PublicCalendarTask>());

@@ -71,12 +71,25 @@ namespace Smartfy.Runner
         {
             list = new List<(string Name, MethodInfo Method)>();
 
-            foreach (var fileName in Directory.GetFiles(path, "*.dll"))
+            foreach (string fileName in Directory.GetFiles(path, "*.dll"))
             {
                 if (!Regex.IsMatch(Path.GetFileName(fileName.ToUpper()), ".+\\.DLL$"))
                     continue;
 
-                System.Reflection.Assembly assembly = System.Reflection.Assembly.LoadFrom(fileName);
+                System.Reflection.Assembly assembly = null;
+                try
+                {
+                    assembly = System.Reflection.Assembly.LoadFrom(fileName);
+                }catch (Exception ex)
+                {
+                    _logger.LogWarning(ex.Message);
+                }
+
+                if (assembly == null)
+                {
+                    continue;
+                }
+
                 Type? classType = GetAcceptedType(assembly);
 
                 if (classType == null)

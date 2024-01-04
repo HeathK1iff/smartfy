@@ -2,6 +2,6 @@
 {
     public interface IDeviceConfiguration
     {
-        string Path { get; set; }
+        string DevicesPath { get; set; }
     }
 }

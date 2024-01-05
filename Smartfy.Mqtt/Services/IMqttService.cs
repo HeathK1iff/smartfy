@@ -4,7 +4,7 @@ namespace Smartfy.Mqtt.Services
 {
     public interface IMqttService: IService
     {
-        void StartListen();
-        void StopListen();
+        void Start();
+        void Stop();
     }
 }

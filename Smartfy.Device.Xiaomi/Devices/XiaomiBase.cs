@@ -49,16 +49,19 @@ namespace Smartfy.Device.Xiaomi.Devices
             if (parcedObject.RootElement.TryGetProperty("battery", out var propBattery))
             {
                 Battery.SetValue(propBattery.GetInt32());
+                _logger.LogTrace($"Battery [{Id.ToString()}] = {Battery.GetValue()}");
             }
 
             if (parcedObject.RootElement.TryGetProperty("voltage", out var propVoltage))
             {
                 BatteryVoltage.SetValue(propBattery.GetInt32());
+                _logger.LogTrace($"Voltage [{Id.ToString()}] = {BatteryVoltage.GetValue()}");
             }
 
             if (parcedObject.RootElement.TryGetProperty("linkquality", out var prop))
             {
                 LinkQuality.SetValue(prop.GetInt32());
+                _logger.LogTrace($"LinkQuality [{Id.ToString()}] = {LinkQuality.GetValue()}");
             }
 
             ParceValue(parcedObject.RootElement);

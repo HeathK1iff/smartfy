@@ -4,8 +4,6 @@
     {
         string Token { get; }
 
-        ISessions Sessions { get; }
-
-        void Save();
+        string SessionsPath { get; }    
     }
 }

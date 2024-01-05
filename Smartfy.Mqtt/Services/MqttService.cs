@@ -38,7 +38,6 @@ namespace Smartfy.Mqtt.Services
 
             _client = new MqttClient(_configuration.Host);
             _client.MqttMsgPublishReceived += MqttMsgReceived;
-            StartListen();
         }
 
         private void MqttMsgReceived(object sender, MqttMsgPublishEventArgs e)
@@ -53,7 +52,7 @@ namespace Smartfy.Mqtt.Services
             });
         }
 
-        public void StartListen()
+        public void Start()
         {
             if (_client.IsConnected)
             {
@@ -78,7 +77,7 @@ namespace Smartfy.Mqtt.Services
             }
         }
 
-        public void StopListen()
+        public void Stop()
         {
             try
             {

@@ -1,4 +1,5 @@
-﻿using Smartfy.Core.Services.Messages;
+﻿using Microsoft.Extensions.Logging;
+using Smartfy.Core.Services.Messages;
 using Smartfy.Device.Entity;
 using System.Text.Json;
 
@@ -21,6 +22,7 @@ namespace Smartfy.Device.Xiaomi.Devices
             if (element.TryGetProperty("contact", out var propContact))
             {
                 Contact.SetValue(propContact.GetBoolean());
+                _logger.LogTrace($"Contact [{Id.ToString()}] = {Contact.GetValue()}");
             }
         }
     }

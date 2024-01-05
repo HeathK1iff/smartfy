@@ -2,7 +2,7 @@
 
 namespace Smartfy.TelegramBot.Configuration.Impl
 {
-    internal class TelegramConfigurationSection : ConfigurationSection
+    internal class TelegramConfigurationSection : ConfigurationSection, ITelegramConfiguration
     {
 
         [ConfigurationProperty("token", IsRequired = true)]
@@ -18,13 +18,12 @@ namespace Smartfy.TelegramBot.Configuration.Impl
             }
         }
 
-        [ConfigurationProperty("sessions", IsDefaultCollection = false)]
-        [ConfigurationCollection(typeof(SessionCollection))]
-        public SessionCollection Sessions
+        [ConfigurationProperty("sessions", IsRequired = true)]
+        public string SessionsPath
         {
             get
             {
-                return (SessionCollection)this["sessions"];
+                return this["sessions"] as string ?? string.Empty;
             }
             set
             {

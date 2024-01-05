@@ -1,9 +1,10 @@
 ﻿using System.Configuration;
+using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Logging;
 using Smartfy.Core.Services;
 using Smartfy.Core.Services.Messages;
 using Smartfy.Core.Services.Tasks;
-using Smartfy.Device.Service;
+using Smartfy.Mqtt.Services;
 using Smartfy.Runner.Tasks;
 
 namespace Smartfy.Runner
@@ -21,7 +22,7 @@ namespace Smartfy.Runner
 
         public Program()
         {
-            _configuration = ConfigurationManager.OpenExeConfiguration(ConfigurationUserLevel.None);
+            _configuration = System.Configuration.ConfigurationManager.OpenExeConfiguration(ConfigurationUserLevel.None);
 
             var logFolder = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "log");
             if (!Directory.Exists(logFolder))
@@ -70,6 +71,7 @@ namespace Smartfy.Runner
             _services.GetService<ITaskService>().Add(new PeriodicalTask(8, 0, publicCalendarTask, _loggerFactory.CreateLogger<PeriodicalTask>()));
 
             _services.GetService<ITaskService>().Start();
+            _services.GetService<IMqttService>().Start();
         }
     }
 }

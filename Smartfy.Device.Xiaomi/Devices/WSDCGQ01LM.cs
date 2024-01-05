@@ -1,4 +1,5 @@
-﻿using Smartfy.Core.Services.Messages;
+﻿using Microsoft.Extensions.Logging;
+using Smartfy.Core.Services.Messages;
 using Smartfy.Device.Entity;
 using System.Text.Json;
 
@@ -27,11 +28,13 @@ namespace Smartfy.Device.Xiaomi.Devices
             if (element.TryGetProperty("humidity", out var propHumidity))
             {
                 Humidity.SetValue(propHumidity.GetSingle());
+                _logger.LogTrace($"Humidity [{Id.ToString()}] = {Humidity.GetValue()}");
             }
 
             if (element.TryGetProperty("temperature", out var propTemp))
             {
                 Temperature.SetValue(propTemp.GetSingle());
+                _logger.LogTrace($"Temperature [{Id.ToString()}] = {Temperature.GetValue()}");
             }   
         }
     }

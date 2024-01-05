@@ -12,27 +12,24 @@ namespace Smartfy.TelegramBot.Configuration.Adapter
         public TelegramConfigurationAdapter(System.Configuration.Configuration configuration)
         {
             _configuration = configuration;
+
+            string basefolder = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "configuration");
+
+            if (!Directory.Exists(basefolder))
+            {
+                Directory.CreateDirectory(basefolder);
+            }
+
             _section = _configuration.GetOrCreateSection<TelegramConfigurationSection>("telegram", item =>
             {
                 item.Token = string.Empty;
+                item.SessionsPath = Path.Combine(basefolder, "telegram_sessions.json");
             });
-
         }
 
         public string Token => _section.Token;
 
-        public ISessions Sessions
-        {
-            get
-            {
-                if (_sessions == null)
-                {
-                    _sessions = new SessionsAdapter(_section.Sessions);
-                }
-
-                return _sessions;
-            }
-        }
+        public string SessionsPath => _section.SessionsPath;
 
         public void Save()
         {

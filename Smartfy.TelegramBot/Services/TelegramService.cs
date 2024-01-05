@@ -4,9 +4,11 @@ using Smartfy.Core.Messages;
 using Smartfy.Core.Services;
 using Smartfy.Core.Services.Messages;
 using Smartfy.Core.Utils;
+using Smartfy.TelegramBot.Classes;
 using Smartfy.TelegramBot.Configuration;
 using Smartfy.TelegramBot.Exceptions;
 using System;
+using System.Reflection.Metadata.Ecma335;
 using Telegram.Bot;
 using Telegram.Bot.Polling;
 using Telegram.Bot.Types;
@@ -22,6 +24,22 @@ namespace Smartfy.TelegramBot.Services
         private ITelegramConfiguration _configuration;
         private ILogger? _logger;
         private readonly IMessageService _messageService;
+        private readonly TelegramSessionRepository _repository;
+        private TelegramSessionsAdapter _sessions;
+
+        public ITelegramSessions Sessions
+        {
+            get
+            {
+                if (_sessions == null)
+                {
+                    _sessions = new TelegramSessionsAdapter(_repository);
+                }
+
+                return _sessions;
+            }
+        }
+            
 
         public TelegramService(ITelegramConfiguration configuration,
             ILogger logger, IMessageService messageService)
@@ -40,8 +58,13 @@ namespace Smartfy.TelegramBot.Services
 
             _messageService.Subscribe<OutputMessage>(this);
 
-            if (_configuration.Token is null)
-                throw new TokenNotDefinedException("Telegram token is not defined");
+            if (string.IsNullOrWhiteSpace(_configuration.Token))
+            {
+                logger.LogWarning("Telegram token is not defined");
+                return;
+            }
+
+            _repository = new TelegramSessionRepository(new FileStream(_configuration.SessionsPath, FileMode.OpenOrCreate, FileAccess.ReadWrite), _logger);
 
             _client = new TelegramBotClient(_configuration.Token);
             ReceiverOptions receiverOptions = new()
@@ -68,11 +91,10 @@ namespace Smartfy.TelegramBot.Services
             if (message.From?.Username is null)
                 return Task.CompletedTask;
 
-            if (!_configuration.Sessions.TryGetChatId(message.From.Username, out long? chatId))
+            if (!_repository.TryGetChatId(message.From.Username, out long? chatId))
             {
-                _configuration.Sessions.Add(message.From.Username, message.Chat.Id);
+                _repository.Add(new TelegramSession(message.Chat.Id, message.From.Username, DateTime.Now));
                 _logger?.LogInformation($"New client ({message.From.Username}:{message.From.LastName}:{message.From.FirstName}) was registered");
-                _configuration.Save();
             }
 
             _messageService.Publish(new IncomeMessage()
@@ -98,7 +120,7 @@ namespace Smartfy.TelegramBot.Services
             if (outMessage is null)
                 return;
 
-            if (_configuration.Sessions.TryGetChatId(outMessage.Recepient, out long? chatId))
+            if (_repository.TryGetChatId(outMessage.Recepient, out long? chatId))
             {
                 _client.SendTextMessageAsync(
                     chatId: chatId,

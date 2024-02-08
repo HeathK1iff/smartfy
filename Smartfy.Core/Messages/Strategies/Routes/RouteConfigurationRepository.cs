@@ -29,9 +29,10 @@ namespace Smartfy.Core.Messages.Strategies.Utils
             if (group != null) 
             {
                 var list = new List<string>(group.Recepients.Split(','));
-                if (!list.Any(item => item.Equals(route.Recepient, StringComparison.OrdinalIgnoreCase)))
+                string recepient = route.Recepient.Trim();
+                if (!list.Any(item => item.Equals(recepient, StringComparison.OrdinalIgnoreCase)))
                 {
-                    list.Add(route.Recepient);
+                    list.Add(recepient);
                 }
                 group.Recepients = string.Join(',', list);
             }
@@ -39,7 +40,7 @@ namespace Smartfy.Core.Messages.Strategies.Utils
             {
                 var item = new GroupElement();
                 item.Group = route.Group;
-                item.Recepients = route.Recepient;
+                item.Recepients = route.Recepient.Trim();
                 _section.Groups.Add(item);
             }
 
@@ -57,7 +58,7 @@ namespace Smartfy.Core.Messages.Strategies.Utils
                     var route = new Route()
                     {
                         Group = group.Group,
-                        Recepient = recepient
+                        Recepient = recepient.Trim()
                     };
 
                     list.Add(route);
@@ -73,9 +74,10 @@ namespace Smartfy.Core.Messages.Strategies.Utils
             if (group != null)
             {
                 var list = new List<string>(group.Recepients.Split(','));
-                if (!list.Any(item => item.Equals(route.Recepient, StringComparison.OrdinalIgnoreCase)))
+                string recepient = route.Recepient.Trim();
+                if (!list.Any(item => item.Equals(recepient, StringComparison.OrdinalIgnoreCase)))
                 {
-                    list.Remove(route.Recepient);
+                    list.Remove(recepient);
                 }
                 group.Recepients = string.Join(',', list);
                 _configuration.Save();

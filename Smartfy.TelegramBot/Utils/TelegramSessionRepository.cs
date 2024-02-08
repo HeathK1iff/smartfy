@@ -66,7 +66,7 @@ namespace Smartfy.TelegramBot.Classes
 
             var items = GetAll();
 
-            var found = items.FirstOrDefault(f => f.UserName.Equals(userName, StringComparison.InvariantCultureIgnoreCase));
+            var found = items.FirstOrDefault(f => f.UserName.Equals(userName.Trim(), StringComparison.InvariantCultureIgnoreCase));
 
             if (found != null)
             {

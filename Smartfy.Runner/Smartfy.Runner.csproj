@@ -1,0 +1,28 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <OutputType>Exe</OutputType>
+    <TargetFramework>net6.0</TargetFramework>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <Nullable>enable</Nullable>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Microsoft.Extensions.Logging" Version="7.0.0" />
+    <PackageReference Include="Microsoft.Extensions.Logging.Abstractions" Version="7.0.1" />
+    <PackageReference Include="Microsoft.Extensions.Logging.Console" Version="7.0.0" />
+    <PackageReference Include="Serilog.Extensions.Logging.File" Version="3.0.0" />
+    <PackageReference Include="System.Configuration.ConfigurationManager" Version="7.0.0" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\Smartfy.Calendar\Smartfy.Calendar.csproj" />
+    <ProjectReference Include="..\Smartfy.Core\Smartfy.Core.csproj" />
+    <ProjectReference Include="..\Smartfy.Device.Xiaomi\Smartfy.Device.Xiaomi.csproj" />
+    <ProjectReference Include="..\Smartfy.Device\Smartfy.Device.csproj" />
+    <ProjectReference Include="..\Smartfy.Mqtt\Smartfy.Mqtt.csproj" />
+    <ProjectReference Include="..\Smartfy.TelegramBot\Smartfy.TelegramBot.csproj" />
+    <ProjectReference Include="..\Smartfy.Weather\Smartfy.Weather.csproj" />
+  </ItemGroup>
+
+</Project>
